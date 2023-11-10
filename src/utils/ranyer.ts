@@ -1,6 +1,6 @@
 export const setup = async () => {
   const port = await generateServerPort()
-  const conf = await readConfig()
+  const conf = await loadRaynerConfig()
 
   const exist = await existXrayCoreBin()
 
@@ -9,7 +9,9 @@ export const setup = async () => {
     await unzipXrayCoreZip(conf)
   }
 
-  const pid = await runXrayCore()
+  await runXrayCore()
+
+  const pid = await store.setup()
 
   return { port, pid }
 }

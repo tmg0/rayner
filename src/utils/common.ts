@@ -11,7 +11,7 @@ interface DownloadFromURLOptions {
   proxy?: string
 }
 
-export const readConfig = async () => {
+export const loadRaynerConfig = async () => {
   const { config } = await loadConfig<RaynerConfig>({ name: 'rayner' })
   return defu(config, { xray: { version: '1.8.4' } })
 }
@@ -46,5 +46,9 @@ export const generateServerPort = async ({ output }: { output: string } = { outp
 }
 
 export const killProcessByPid = (pid: number | string) => {
-  kill(Number(pid), 'SIGTERM')
+  try {
+    kill(Number(pid), 'SIGTERM')
+  } catch (error) {
+    consola.warn(error)
+  }
 }

@@ -7,3 +7,5 @@ export const XRAY_CORE_BIN = os.platform() === 'win32' ? 'xray.exe' : 'xray'
 export const XRAY_CORE_DIR = '.xray'
 
 export const RAYNER_DIR = '.rayner'
+
+export const STORAGE_OUTBOUNDS = 'outbounds'

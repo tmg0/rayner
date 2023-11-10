@@ -1,9 +1,25 @@
 import os from 'node:os'
 import { spawn, exec } from 'node:child_process'
 import { resolve } from 'pathe'
+import { XrayConfig } from '~/types'
 
 const XRAY_CORE = resolve(join(XRAY_CORE_DIR, XRAY_CORE_BIN))
 const XRAY_CONFIG = resolve(join(XRAY_CORE_DIR, 'config.json'))
+const RAYNER_PID = resolve(join(RAYNER_DIR, 'xray.pid'))
+
+process.on('exit', () => {
+  fse.remove(RAYNER_PID)
+})
+
+export const rewriteXrayConfig = async (config: XrayConfig) => {
+  await fse.remove(XRAY_CONFIG)
+  return await fse.outputJson(XRAY_CONFIG, config)
+}
+
+export const loadXrayConfig = async () => {
+  const json: XrayConfig = await fse.readJson(XRAY_CONFIG)
+  return json
+}
 
 export const downloadXrayCoreZip = async (conf: RaynerConfig) => {
   const release = parseXrayCoreReleaseURL(conf)
@@ -52,12 +68,12 @@ export const stopXrayCore = async () => {
 
 export const restartXrayCore = async () => {
   await stopXrayCore()
-  await startXrayCore()
+  return await startXrayCore()
 }
 
 export const writeDefaltXrayConfig = async () => {
   const path = join(XRAY_CORE_DIR, 'config.json')
-  await fse.outputJson(path, {})
+  await fse.outputJson(path, defaultXrayConfig)
 }
 
 export const validateConfig = async (path: string = join(XRAY_CORE_DIR, 'config.json')) => {
