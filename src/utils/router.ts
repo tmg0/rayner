@@ -1,2 +1,5 @@
 export const router = createRouter()
   .post('/ado', adoPost)
+  .post('/rmo', rmoPost)
+  .post('/eno', enoPost)
+  .post('/diso', disoPost)
