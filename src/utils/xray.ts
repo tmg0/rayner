@@ -33,8 +33,10 @@ export const unzipXrayCoreZip = async (conf: RaynerConfig) => {
   await fse.remove(join(XRAY_CORE_DIR, filename))
 }
 
-export const existXrayCoreBin = () => {
-  return fse.pathExists(XRAY_CORE)
+export const existXrayCoreBin = async () => {
+  const exist = await fse.pathExists(XRAY_CORE)
+  if (!exist) { consola.warn(`Do not exist xray core under ${XRAY_CORE}`) }
+  return exist
 }
 
 export const parseXrayCoreReleaseURL = ({ xray }: RaynerConfig) => {
