@@ -3,6 +3,7 @@ import { spawn, exec } from 'node:child_process'
 import { resolve } from 'pathe'
 
 const XRAY_CORE = resolve(join(XRAY_CORE_DIR, XRAY_CORE_BIN))
+const XRAY_CONFIG = resolve(join(XRAY_CORE_DIR, 'config.json'))
 
 export const downloadXrayCoreZip = async (conf: RaynerConfig) => {
   const release = parseXrayCoreReleaseURL(conf)
@@ -32,7 +33,7 @@ export const parseXrayCoreReleaseURL = ({ xray }: RaynerConfig) => {
 export const runXrayCore = async () => {
   const valid = await validateConfig()
   if (!valid) { await writeDefaltXrayConfig() }
-  const { pid } = spawn(XRAY_CORE, ['run'])
+  const { pid } = spawn(XRAY_CORE, ['run', '-c', XRAY_CONFIG])
   const pidPath = join(RAYNER_DIR, 'xray.pid')
   await fse.ensureFile(pidPath)
   await fse.outputFile(pidPath, String(pid))
