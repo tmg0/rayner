@@ -25,6 +25,7 @@ export default defineConfig({
         { name: 'getRandomPort', from: 'get-port-please' },
         { name: 'join', from: 'pathe' },
         { name: 'resolve', from: 'pathe' },
+        { name: 'dirname', from: 'pathe' },
         { name: 'parseFilename', from: 'ufo' }
       ],
       dirs: [
