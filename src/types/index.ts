@@ -5,7 +5,7 @@ export interface RaynerConfig {
   }
 }
 
-export interface RaynerAdapter {
+export interface RaynerOutbound {
   tag: string
   protocol: 'vmess' | 'shadowsocks'
   address: string

@@ -23,10 +23,10 @@ const parseXrayToRayner = (outbound: XrayOutbound, defaults: { enabled: boolean 
     s.password = outbound.settings.servers[0].password
   }
 
-  return s as RaynerAdapter
+  return s as RaynerOutbound
 }
 
-const parseRaynerToXray = (outbound: RaynerAdapter, { tag }: { tag: string }): XrayOutbound => {
+const parseRaynerToXray = (outbound: RaynerOutbound, { tag }: { tag: string }): XrayOutbound => {
   if (outbound.protocol === 'vmess') {
     return {
       tag,
@@ -69,7 +69,7 @@ const parseRaynerToXray = (outbound: RaynerAdapter, { tag }: { tag: string }): X
 
 const parseOutbounds = ({ outbounds }: Partial<XrayConfig>) => {
   if (!outbounds) { return [] }
-  const proxies: Record<string, RaynerAdapter> = {}
+  const proxies: Record<string, RaynerOutbound> = {}
   outbounds.forEach((outbound) => {
     const s = parseXrayToRayner(outbound)
 
@@ -95,7 +95,7 @@ const syncXrayConfig = async () => {
   const outbounds: XrayConfig['outbounds'] = []
   const xrayConf = await loadXrayConfig()
   const _others = xrayConf.outbounds?.filter(({ protocol }) => !['vmess', 'shadowsocks'].includes(protocol)) ?? []
-  const _cache = await cache.get<Record<string, RaynerAdapter>>(STORAGE_OUTBOUNDS)
+  const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
   Object.values(_cache).forEach((proxy, index) => {
     if (proxy.enabled) {
       const outbound = parseRaynerToXray(proxy, { tag: [proxy.protocol, index].join('-') })
@@ -111,33 +111,33 @@ export const store = {
   async setup () {
     const xrayConf = await loadXrayConfig()
     const outbounds = parseOutbounds(xrayConf)
-    const _cache = await cache.get<Record<string, RaynerAdapter>>(STORAGE_OUTBOUNDS)
+    const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
     await cache.set(STORAGE_OUTBOUNDS, defu(outbounds, _cache))
     return await syncXrayConfig()
   },
 
-  async ado (proxy: RaynerAdapter) {
-    const _cache = await cache.get<Record<string, RaynerAdapter>>(STORAGE_OUTBOUNDS)
+  async ado (proxy: RaynerOutbound) {
+    const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
     await cache.set(STORAGE_OUTBOUNDS, defu({ [proxy.address]: defu(proxy, { enabled: true }) }, _cache))
     return await syncXrayConfig()
   },
 
-  async rmo (proxy: Partial<RaynerAdapter>) {
-    const _cache = await cache.get<Record<string, RaynerAdapter>>(STORAGE_OUTBOUNDS)
+  async rmo (proxy: Partial<RaynerOutbound>) {
+    const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
     delete _cache[proxy.address]
     await cache.set(STORAGE_OUTBOUNDS, _cache)
     return await syncXrayConfig()
   },
 
   async eno ({ address }: { address: string }) {
-    const value = await cache.get<RaynerAdapter>(address)
+    const value = await cache.get<RaynerOutbound>(address)
     value.enabled = true
     await cache.set(address, value)
     await syncXrayConfig()
   },
 
   async diso ({ address }: { address: string }) {
-    const value = await cache.get<RaynerAdapter>(address)
+    const value = await cache.get<RaynerOutbound>(address)
     value.enabled = false
     await cache.set(address, value)
     await syncXrayConfig()
