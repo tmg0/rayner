@@ -16,6 +16,8 @@ export default defineConfig({
         { name: 'createApp', from: 'h3' },
         { name: 'toNodeListener', from: 'h3' },
         { name: 'createRouter', from: 'h3' },
+        { name: 'handleCors', from: 'h3' },
+        { name: 'appendCorsHeaders', from: 'h3' },
         { name: 'eventHandler', from: 'h3' },
         { name: 'readBody', from: 'h3' },
         { name: 'defu', from: 'defu' },
