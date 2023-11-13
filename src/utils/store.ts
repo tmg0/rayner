@@ -80,7 +80,7 @@ const parseOutbounds = ({ outbounds }: Partial<XrayConfig>) => {
   return proxies
 }
 
-const cache = {
+export const cache = {
   async set (key: any, value: any) {
     await storage.setItem(hash(key), JSON.stringify(value))
   },
