@@ -3,3 +3,4 @@ node_modules
 .xray
 dist
 unimport.d.ts
+*.exe
