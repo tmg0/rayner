@@ -1,10 +1,4 @@
-import { createStorage } from 'unstorage'
-import fsDriver from 'unstorage/drivers/fs'
-import { loadXrayConfig } from './xray'
-
-const RAYNER_CACHE = resolve(join(RAYNER_DIR, '.cache'))
-
-export const storage = createStorage({ driver: fsDriver({ base: RAYNER_CACHE }) })
+import { loadXrayConfig } from '~/utils/xray'
 
 const parseXrayToRayner = (outbound: XrayOutbound, defaults: { enabled: boolean } = { enabled: true }) => {
   const s: Record<string, any> = defu({ protocol: outbound.protocol }, defaults, { enabled: true })
@@ -80,17 +74,6 @@ const parseOutbounds = ({ outbounds }: Partial<XrayConfig>) => {
   return proxies
 }
 
-export const cache = {
-  async set (key: any, value: any) {
-    await storage.setItem(hash(key), JSON.stringify(value))
-  },
-
-  async get <T> (key: any) {
-    const value = await storage.getItem(hash(key))
-    return destr<T>(value)
-  }
-}
-
 const syncXrayConfig = async () => {
   const outbounds: XrayConfig['outbounds'] = []
   const xrayConf = await loadXrayConfig()
@@ -107,7 +90,7 @@ const syncXrayConfig = async () => {
   return await restartXrayCore()
 }
 
-export const store = {
+export const outboundStore = {
   async setup () {
     const xrayConf = await loadXrayConfig()
     const outbounds = parseOutbounds(xrayConf)
@@ -116,9 +99,21 @@ export const store = {
     return await syncXrayConfig()
   },
 
-  async ado (proxy: RaynerOutbound) {
+  async ado (proxy: RaynerOutbound | RaynerOutbound[]) {
     const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
-    await cache.set(STORAGE_OUTBOUNDS, defu({ [proxy.address]: defu(proxy, { enabled: true }) }, _cache))
+
+    if (Array.isArray(proxy)) {
+      const _proxies = {}
+      proxy.forEach((_p) => {
+        _proxies[_p.address] = defu(_p, { enabled: true })
+      })
+      await cache.set(STORAGE_OUTBOUNDS, defu(_proxies, _cache))
+    }
+
+    if (!Array.isArray(proxy)) {
+      await cache.set(STORAGE_OUTBOUNDS, defu({ [proxy.address]: defu(proxy, { enabled: true }) }, _cache))
+    }
+
     return await syncXrayConfig()
   },
 

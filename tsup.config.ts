@@ -32,6 +32,7 @@ export default defineConfig({
       ],
       dirs: [
         './src/types/*.ts',
+        './src/store/*.ts',
         './src/routes/*.ts',
         './src/utils/*.ts'
       ]

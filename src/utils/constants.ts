@@ -12,3 +12,4 @@ export const XRAY_CORE_DIR = join(EXEC_DIR, '.xray')
 export const RAYNER_DIR = join(EXEC_DIR, '.rayner')
 
 export const STORAGE_OUTBOUNDS = 'outbounds'
+export const STORAGE_SUBSCRIPTIONS = 'subscriptions'

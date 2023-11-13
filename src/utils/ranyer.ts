@@ -11,7 +11,7 @@ export const setup = async () => {
 
   await runXrayCore()
 
-  const pid = await store.setup()
+  const pid = await outboundStore.setup()
 
   return { port, pid }
 }
