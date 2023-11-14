@@ -22,6 +22,7 @@
   },
   "homepage": "https://github.com/zekunjin/rayner#readme",
   "dependencies": {
+    "@nozomuikuta/h3-cors": "^0.2.2",
     "adm-zip": "^0.5.10",
     "c12": "^1.5.1",
     "consola": "^3.2.3",

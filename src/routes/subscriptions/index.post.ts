@@ -43,8 +43,6 @@ const parseShadowsocks = (address: string): RaynerOutbound => {
 }
 
 export default eventHandler(async (event) => {
-  appendCorsHeaders(event, { origin: '*' })
-  appendCorsPreflightHeaders(event, { origin: '*' })
   const body = await readBody(event)
   await subscriptionStore.ads(body)
 

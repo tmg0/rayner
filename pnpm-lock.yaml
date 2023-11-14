@@ -5,6 +5,9 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@nozomuikuta/h3-cors':
+    specifier: ^0.2.2
+    version: 0.2.2(defu@6.1.3)(h3@1.8.2)
   adm-zip:
     specifier: ^0.5.10
     version: 0.5.10
@@ -430,6 +433,17 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.15.0
     dev: true
+
+  /@nozomuikuta/h3-cors@0.2.2(defu@6.1.3)(h3@1.8.2):
+    resolution: {integrity: sha512-4Kjy/yWd8QSVpHDY4Rtp2k/26FFUJeIiH5GlOZ+i8nBdRkP+8YKQQSQo6vOLuTB+Z9U1qeczzORkLa9qWvKzHg==}
+    deprecated: This package has been integrated to h3@1.5.0. Thank you for all kinds of contribution to this package!
+    peerDependencies:
+      defu: ^6.1.2
+      h3: ^1.2.1
+    dependencies:
+      defu: 6.1.3
+      h3: 1.8.2
+    dev: false
 
   /@nuxtjs/eslint-config-typescript@12.1.0(eslint@8.53.0)(typescript@5.2.2):
     resolution: {integrity: sha512-l2fLouDYwdAvCZEEw7wGxOBj+i8TQcHFu3zMPTLqKuv1qu6WcZIr0uztkbaa8ND1uKZ9YPqKx6UlSOjM4Le69Q==}
