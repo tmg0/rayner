@@ -9,7 +9,10 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "baseUrl": ".",
-    "paths": { "~/*": ["./src/*"] }
+    "paths": {
+      "~/*": ["./src/*"],
+      "~~/*": ["./*"],
+    }
   },
   "include": ["src/**/*.ts", "unimport.d.ts"],
   "exclude": ["node_modules", "dist"]

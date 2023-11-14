@@ -1,3 +1,5 @@
+import { version } from '~~/package.json'
+
 export const VMESS_PREFIX = 'vmess://'
 export const SS_PREFIX = 'ss://'
 
@@ -46,7 +48,7 @@ export default eventHandler(async (event) => {
   const body = await readBody(event)
   await subscriptionStore.ads(body)
 
-  const response = await fetch(body.link)
+  const response = await fetch(body.link, { headers: { 'User-Agent': `Rayner/${version}` } })
   const decode = await response.text()
   const encode = atob(decode)
 
