@@ -18,6 +18,7 @@ export default defineConfig({
         { name: 'createRouter', from: 'h3' },
         { name: 'handleCors', from: 'h3' },
         { name: 'appendCorsHeaders', from: 'h3' },
+        { name: 'appendCorsPreflightHeaders', from: 'h3' },
         { name: 'eventHandler', from: 'h3' },
         { name: 'readBody', from: 'h3' },
         { name: 'defu', from: 'defu' },
