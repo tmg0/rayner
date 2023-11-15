@@ -6,6 +6,7 @@ import getXrayProfile from '~/routes/xray-profiles/[id]/index.get'
 import postSubscriptions from '~/routes/subscriptions/index.post'
 
 export const router = createRouter()
+  .get('/', eventHandler(() => ({})))
   .post('/outbounds', postOutbounds)
   .get('/outbounds', getOutbounds)
   .delete('/outbounds', deleteOutbounds)
