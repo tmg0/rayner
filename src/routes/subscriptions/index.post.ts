@@ -1,4 +1,3 @@
-import https from 'https'
 import { request, Agent } from 'undici'
 import { version } from '~~/package.json'
 
