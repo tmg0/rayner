@@ -4,9 +4,11 @@ import deleteOutbounds from '~/routes/outbounds/index.delete'
 import patchOutbounds from '~/routes/outbounds/index.patch'
 import getXrayProfile from '~/routes/xray-profiles/[id]/index.get'
 import postSubscriptions from '~/routes/subscriptions/index.post'
+import shutdownPost from '~/routes/shutdown.post'
 
 export const router = createRouter()
   .get('/', eventHandler(() => ({})))
+  .post('/shutdown', shutdownPost)
   .post('/outbounds', postOutbounds)
   .get('/outbounds', getOutbounds)
   .delete('/outbounds', deleteOutbounds)
