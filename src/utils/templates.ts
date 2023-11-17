@@ -119,3 +119,87 @@ export const defaultXrayConfig = {
     }
   }
 }
+
+export const proxyXrayConfig = {
+  log: {
+    loglevel: 'warning'
+  },
+  inbounds: [
+    {
+      tag: 'http',
+      port: 1080,
+      listen: '0.0.0.0',
+      protocol: 'http',
+      sniffing: {
+        enabled: true,
+        destOverride: [
+          'http',
+          'tls',
+          'quic',
+          'fakedns',
+          'fakedns+others'
+        ],
+        metadataOnly: true
+      },
+      settings: {
+        udpEnabled: true
+      }
+    }
+  ],
+  outbounds: [
+    {
+      tag: 'direct',
+      protocol: 'freedom',
+      settings: {}
+    },
+    {
+      tag: 'block',
+      protocol: 'blackhole',
+      settings: {
+        response: {
+          type: 'http'
+        }
+      }
+    }
+  ],
+  routing: {
+    domainStrategy: 'AsIs',
+    rules: [
+      {
+        type: 'field',
+        inboundTag: [
+          'api'
+        ],
+        outboundTag: 'api',
+        enabled: true
+      },
+      {
+        id: '4945167512436168377',
+        type: 'field',
+        port: '0-65535',
+        balancerTag: 'proxy',
+        enabled: true
+      }
+    ],
+    balancers: [
+      {
+        tag: 'proxy',
+        selector: [
+          'vmess',
+          'shadowsocks'
+        ],
+        strategy: {
+          type: 'random'
+        }
+      }
+    ],
+    observatory: {
+      subjectSelector: [
+        'vmess',
+        'ss'
+      ],
+      probeURL: 'https://www.google.com/generate_204',
+      probeInterval: '1m'
+    }
+  }
+}

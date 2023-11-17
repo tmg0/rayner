@@ -24,6 +24,7 @@ export default defineConfig({
         { name: 'destr', from: 'destr' },
         { name: 'hash', from: 'ohash' },
         { name: 'getRandomPort', from: 'get-port-please' },
+        { name: 'checkPort', from: 'get-port-please' },
         { name: 'join', from: 'pathe' },
         { name: 'resolve', from: 'pathe' },
         { name: 'dirname', from: 'pathe' },

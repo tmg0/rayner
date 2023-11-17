@@ -1,5 +1,5 @@
 import os from 'node:os'
-import { spawn } from 'node:child_process'
+import { spawn, exec } from 'node:child_process'
 import { resolve } from 'pathe'
 import { XrayConfig } from '~/types'
 
@@ -17,8 +17,12 @@ export const rewriteXrayConfig = async (config: XrayConfig) => {
 }
 
 export const loadXrayConfig = async () => {
-  const json: XrayConfig = await fse.readJson(XRAY_CONFIG)
-  return json
+  try {
+    const json: XrayConfig = await fse.readJson(XRAY_CONFIG)
+    return json
+  } catch {
+    return undefined
+  }
 }
 
 export const downloadXrayCoreZip = async (conf: RaynerConfig) => {
@@ -51,6 +55,18 @@ export const parseXrayCoreReleaseURL = ({ xray }: RaynerConfig) => {
 export const runXrayCore = async () => {
   const valid = await validateConfig()
   if (!valid) { await writeDefaltXrayConfig() }
+  const xrayConf = await loadXrayConfig()
+  if (!xrayConf) { return }
+
+  const [{ port }] = xrayConf.inbounds ?? []
+  if (!port) { return }
+  const isPortAvailable = !!(await checkPort(port))
+
+  if (!isPortAvailable) {
+    xrayConf.inbounds[0].port = await getRandomPort()
+    await rewriteXrayConfig(xrayConf)
+  }
+
   const { pid } = spawn(XRAY_CORE, ['run', '-c', XRAY_CONFIG])
   const pidPath = join(RAYNER_DIR, 'xray.pid')
   await fse.ensureFile(pidPath)
@@ -74,11 +90,10 @@ export const restartXrayCore = async () => {
 }
 
 export const writeDefaltXrayConfig = async () => {
-  const path = join(XRAY_CORE_DIR, 'config.json')
-  await fse.outputJson(path, defaultXrayConfig)
+  await fse.outputJson(XRAY_CONFIG, defaultXrayConfig)
 }
 
-export const validateConfig = async (path: string = join(XRAY_CORE_DIR, 'config.json')) => {
+export const validateConfig = async (path: string = XRAY_CONFIG) => {
   const exist = await fse.pathExists(path)
   if (!exist) { return false }
   return testXrayConfig()
@@ -93,8 +108,18 @@ export const testXrayConfig = async () => {
   }
 }
 
-export const execXrayAsync = async (cmd: string) => {
-  const execa = (await import('execa')).execa
-  const { stdout } = await execa(XRAY_CORE, cmd.split(' ')).pipeStdout(process.stdout)
-  return stdout
+export const execXrayAsync = (cmd: string, options: { stdout: boolean } = { stdout: false }): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const p = exec(`${XRAY_CORE} ${cmd}`, (error, stdout) => {
+      if (error) {
+        reject(error)
+        return
+      }
+      resolve(stdout)
+    })
+
+    if (options.stdout) {
+      p.stdout?.pipe(process.stdout)
+    }
+  })
 }

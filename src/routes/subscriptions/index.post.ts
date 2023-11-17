@@ -47,7 +47,6 @@ const parseShadowsocks = (address: string): RaynerOutbound => {
 
 export default eventHandler(async (event) => {
   const body = await readBody(event)
-  await subscriptionStore.ads(body)
 
   const headers = { 'User-Agent': `Rayner/${version}` }
 
@@ -69,6 +68,7 @@ export default eventHandler(async (event) => {
     return undefined
   }).filter(Boolean)
 
+  await subscriptionStore.ads(body)
   await outboundStore.ado(outbounds)
 
   return {}
