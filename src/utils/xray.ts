@@ -1,5 +1,5 @@
 import os from 'node:os'
-import { spawn, exec } from 'node:child_process'
+import { spawn } from 'node:child_process'
 import { resolve } from 'pathe'
 import { XrayConfig } from '~/types'
 
@@ -93,18 +93,8 @@ export const testXrayConfig = async () => {
   }
 }
 
-export const execXrayAsync = (cmd: string, options: { stdout: boolean } = { stdout: false }): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const p = exec(`${XRAY_CORE} ${cmd}`, (error, stdout) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve(stdout)
-    })
-
-    if (options.stdout) {
-      p.stdout?.pipe(process.stdout)
-    }
-  })
+export const execXrayAsync = async (cmd: string) => {
+  const execa = (await import('execa')).execa
+  const { stdout } = await execa(XRAY_CORE, cmd.split(' ')).pipeStdout(process.stdout)
+  return stdout
 }
