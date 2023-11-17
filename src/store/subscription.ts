@@ -1,4 +1,4 @@
-interface Subscription {
+export interface Subscription {
   link: string
 }
 

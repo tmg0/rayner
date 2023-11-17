@@ -45,7 +45,7 @@ export const generateServerPort = async ({ output }: { output: string } = { outp
   return port
 }
 
-export const killProcessByPid = (pid: number | string) => {
+export const terminateProcessByPid = (pid: number | string) => {
   try {
     kill(Number(pid), 'SIGTERM')
   } catch (error) {

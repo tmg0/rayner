@@ -81,7 +81,7 @@ export const stopXrayCore = async () => {
   fse.ensureFile(pidPath)
   const pid = await fse.readFile(pidPath)
   if (!pid) { return }
-  killProcessByPid(pid)
+  terminateProcessByPid(pid)
 }
 
 export const restartXrayCore = async () => {
