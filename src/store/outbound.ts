@@ -81,9 +81,9 @@ const syncXrayConfig = async () => {
   const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
 
   const _sorted = Object.values(_cache).sort((a, b) => {
-    if (!a.sort) { return 1 }
-    if (!b.sort) { return -1 }
-    return a.sort - b.sort
+    if (!a.index) { return 1 }
+    if (!b.index) { return -1 }
+    return a.index - b.index
   })
 
   _sorted.forEach((proxy, index) => {
