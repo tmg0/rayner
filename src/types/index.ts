@@ -17,6 +17,7 @@ export interface RaynerOutbound {
   alterId?: number
 
   enabled?: boolean
+  sort?: number
 }
 
 export interface XrayConfig {

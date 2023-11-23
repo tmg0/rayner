@@ -79,12 +79,20 @@ const syncXrayConfig = async () => {
   const xrayConf = await loadXrayConfig()
   const _others = xrayConf.outbounds?.filter(({ protocol }) => !['vmess', 'shadowsocks'].includes(protocol)) ?? []
   const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
-  Object.values(_cache).forEach((proxy, index) => {
+
+  const _sorted = Object.values(_cache).sort((a, b) => {
+    if (!a.sort) { return 1 }
+    if (!b.sort) { return -1 }
+    return a.sort - b.sort
+  })
+
+  _sorted.forEach((proxy, index) => {
     if (proxy.enabled) {
       const outbound = parseRaynerToXray(proxy, { tag: [proxy.protocol, index].join('-') })
       if (outbound) { outbounds.push(outbound) }
     }
   })
+
   xrayConf.outbounds = [...outbounds, ..._others]
   await rewriteXrayConfig(xrayConf)
   return await restartXrayCore()
@@ -120,6 +128,14 @@ export const outboundStore = {
   async rmo (proxy: Partial<RaynerOutbound>) {
     const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
     delete _cache[proxy.address]
+    await cache.set(STORAGE_OUTBOUNDS, _cache)
+    return await syncXrayConfig()
+  },
+
+  async puto (proxy: Partial<RaynerOutbound>) {
+    const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
+    if (!_cache[proxy.address]) { _cache[proxy.address] = {} }
+    _cache[proxy.address] = defu(proxy, _cache[proxy.address])
     await cache.set(STORAGE_OUTBOUNDS, _cache)
     return await syncXrayConfig()
   },
