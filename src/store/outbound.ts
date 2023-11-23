@@ -138,7 +138,7 @@ export const outboundStore = {
     if (Array.isArray(proxy)) {
       proxy.forEach((_p) => {
         if (!_cache[_p.address]) { _cache[_p.address] = {} }
-        _cache[_p.address] = defu(proxy, _cache[_p.address])
+        _cache[_p.address] = defu(_p, _cache[_p.address])
       })
     }
 
