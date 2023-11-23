@@ -132,10 +132,21 @@ export const outboundStore = {
     return await syncXrayConfig()
   },
 
-  async puto (proxy: Partial<RaynerOutbound>) {
+  async puto (proxy: RaynerOutbound | RaynerOutbound[]) {
     const _cache = await cache.get<Record<string, RaynerOutbound>>(STORAGE_OUTBOUNDS)
-    if (!_cache[proxy.address]) { _cache[proxy.address] = {} }
-    _cache[proxy.address] = defu(proxy, _cache[proxy.address])
+
+    if (Array.isArray(proxy)) {
+      proxy.forEach((_p) => {
+        if (!_cache[_p.address]) { _cache[_p.address] = {} }
+        _cache[_p.address] = defu(proxy, _cache[_p.address])
+      })
+    }
+
+    if (!Array.isArray(proxy)) {
+      if (!_cache[proxy.address]) { _cache[proxy.address] = {} }
+      _cache[proxy.address] = defu(proxy, _cache[proxy.address])
+    }
+
     await cache.set(STORAGE_OUTBOUNDS, _cache)
     return await syncXrayConfig()
   },
