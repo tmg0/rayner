@@ -102,7 +102,7 @@ export const defaultXrayConfig = {
         tag: 'proxy',
         selector: ['rayner'],
         strategy: {
-          type: 'leastPing'
+          type: 'random'
         }
       }
     ],
@@ -180,7 +180,7 @@ export const proxyXrayConfig = {
         tag: 'proxy',
         selector: ['rayner'],
         strategy: {
-          type: 'leastPing'
+          type: 'random'
         }
       }
     ],
