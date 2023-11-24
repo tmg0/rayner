@@ -100,20 +100,14 @@ export const defaultXrayConfig = {
     balancers: [
       {
         tag: 'proxy',
-        selector: [
-          'vmess',
-          'shadowsocks'
-        ],
+        selector: ['rayner'],
         strategy: {
           type: 'random'
         }
       }
     ],
     observatory: {
-      subjectSelector: [
-        'vmess',
-        'ss'
-      ],
+      subjectSelector: ['rayner'],
       probeURL: 'https://www.google.com/generate_204',
       probeInterval: '1m'
     }
@@ -184,20 +178,14 @@ export const proxyXrayConfig = {
     balancers: [
       {
         tag: 'proxy',
-        selector: [
-          'vmess',
-          'shadowsocks'
-        ],
+        selector: ['rayner'],
         strategy: {
           type: 'random'
         }
       }
     ],
     observatory: {
-      subjectSelector: [
-        'vmess',
-        'ss'
-      ],
+      subjectSelector: ['rayner'],
       probeURL: 'https://www.google.com/generate_204',
       probeInterval: '1m'
     }

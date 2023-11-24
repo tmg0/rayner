@@ -88,7 +88,7 @@ const syncXrayConfig = async () => {
 
   _sorted.forEach((proxy, index) => {
     if (proxy.enabled) {
-      const outbound = parseRaynerToXray(proxy, { tag: [proxy.protocol, index].join('-') })
+      const outbound = parseRaynerToXray(proxy, { tag: ['rayner', proxy.protocol, index].join('-') })
       if (outbound) { outbounds.push(outbound) }
     }
   })
